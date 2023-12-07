@@ -1,30 +1,13 @@
-package org.menjivar.springcloud.msvc.usuarios.models.entity;
+package org.menjivar.springcloud.msvc.cursos.models;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 
-@Entity
-@Table(name = "usuarios")
+
 public class Usuario {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
-
-    @NotBlank
     private String nombre;
-
-    @NotEmpty
-    @Email
-    @Column(unique = true)
     private String email;
-    @NotEmpty
     private String password;
-
-    public Usuario() {
-    }
-
 
     public Long getId() {
         return id;

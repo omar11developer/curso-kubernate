@@ -1,5 +1,6 @@
 package org.menjivar.springcloud.msvc.usuarios.services.implementacion;
 
+import org.menjivar.springcloud.msvc.usuarios.clients.CursoClientRest;
 import org.menjivar.springcloud.msvc.usuarios.models.entity.Usuario;
 import org.menjivar.springcloud.msvc.usuarios.repositories.UsuarioRepository;
 import org.menjivar.springcloud.msvc.usuarios.services.service.UsuariosService;
@@ -12,9 +13,11 @@ import java.util.Optional;
 public class UsuarioServiceImpl implements UsuariosService {
 
     private final UsuarioRepository repository;
+    private final CursoClientRest client;
 
-    public UsuarioServiceImpl(UsuarioRepository repository) {
+    public UsuarioServiceImpl(UsuarioRepository repository, CursoClientRest client) {
         this.repository = repository;
+        this.client = client;
     }
 
     @Override
@@ -30,6 +33,11 @@ public class UsuarioServiceImpl implements UsuariosService {
     }
 
     @Override
+    public Optional<Usuario> buscarPorEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
+    @Override
     @Transactional
     public Usuario guardar(Usuario usuario) {
         return repository.save(usuario);
@@ -39,5 +47,12 @@ public class UsuarioServiceImpl implements UsuariosService {
     @Transactional
     public void eliminar(Long id) {
         repository.deleteById(id);
+        client.eliminarCursoUsuario(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Usuario> ListarPorIds(Iterable<Long> ids) {
+        return (List<Usuario>) repository.findAllById(ids);
     }
 }
